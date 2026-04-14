@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 13 — Manejo de Objeciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #132643;
+    --gold: #C9A96E;
+    --gold-light: #e8c98a;
+    --cream: #F1EDE9;
+    --dark: #0a1628;
+    --mid: #1e3a5f;
+    --success: #2ecc71;
+    --error: #e74c3c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(201,169,110,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(201,169,110,0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(201,169,110,0.3);
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,169,110,0.15);
+    border: 1px solid rgba(201,169,110,0.4);
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 span { color: var(--gold); }
+
+  .subtitle {
+    color: rgba(241,237,233,0.6);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* Mode Toggle */
+  .mode-toggle {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .mode-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,169,110,0.25);
+    color: rgba(241,237,233,0.7);
+    padding: 0.6rem 1.4rem;
+    border-radius: 25px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.03em;
+  }
+
+  .mode-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .mode-btn:hover:not(.active) {
+    border-color: var(--gold);
+    color: var(--cream);
+  }
+
+  /* ========== SEARCH MODE ========== */
+  .search-section { display: none; }
+  .search-section.active { display: block; }
+
+  .search-wrap {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(201,169,110,0.35);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #searchInput:focus { border-color: var(--gold); }
+  #searchInput::placeholder { color: rgba(241,237,233,0.35); }
+
+  .search-hint {
+    font-size: 0.78rem;
+    color: rgba(241,237,233,0.4);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .search-hint span {
+    display: inline-block;
+    background: rgba(201,169,110,0.12);
+    border: 1px solid rgba(201,169,110,0.25);
+    color: var(--gold-light);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    margin: 0.15rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .search-hint span:hover {
+    background: rgba(201,169,110,0.25);
+  }
+
+  .result-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,169,110,0.2);
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
+    animation: slideIn 0.3s ease;
+    display: none;
+  }
+
+  .result-card.visible { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .objection-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .objection-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .objection-subtext {
+    font-size: 0.8rem;
+    color: rgba(241,237,233,0.4);
+    font-style: italic;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(201,169,110,0.15);
+  }
+
+  .response-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(201,169,110,0.7);
+    margin-bottom: 0.7rem;
+  }
+
+  .response-text {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: rgba(241,237,233,0.9);
+    background: rgba(201,169,110,0.05);
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.2rem;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .copy-btn {
+    margin-top: 1rem;
+    background: transparent;
+    border: 1px solid rgba(201,169,110,0.35);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: rgba(201,169,110,0.1); }
+  .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+  .no-result {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(241,237,233,0.4);
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  .no-result.visible { display: block; }
+
+  /* ========== GAME MODE ========== */
+  .game-section { display: none; }
+  .game-section.active { display: block; }
+
+  .progress-bar {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    height: 6px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+
+  .game-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(241,237,233,0.5);
+  }
+
+  .score-display {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .score-num span { font-size: 1.2rem; color: rgba(201,169,110,0.5); }
+
+  .question-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .question-number {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .client-says {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .client-icon {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background: rgba(201,169,110,0.15);
+    border-radius: 50%;
+    line-height: 48px;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .option-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(201,169,110,0.2);
+    color: rgba(241,237,233,0.85);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--gold);
+    background: rgba(201,169,110,0.08);
+    transform: translateX(4px);
+  }
+
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(46,204,113,0.1);
+    color: #a8f0c6;
+  }
+
+  .option-btn.wrong {
+    border-color: var(--error);
+    background: rgba(231,76,60,0.08);
+    color: rgba(241,237,233,0.4);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    background: rgba(201,169,110,0.08);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.5rem;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+
+  .feedback-box.visible { display: block; }
+  .feedback-box.correct-fb { border-color: rgba(46,204,113,0.4); background: rgba(46,204,113,0.06); }
+  .feedback-box.wrong-fb { border-color: rgba(231,76,60,0.3); background: rgba(231,76,60,0.05); }
+
+  .feedback-emoji { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .feedback-title { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
+  .feedback-correct-fb .feedback-title { color: #2ecc71; }
+  .feedback-box.wrong-fb .feedback-title { color: #e74c3c; }
+  .feedback-text { font-size: 0.83rem; color: rgba(241,237,233,0.7); line-height: 1.6; }
+
+  .next-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border: none;
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+    display: none;
+  }
+
+  .next-btn.visible { display: block; }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,169,110,0.3); }
+
+  /* Results screen */
+  .results-screen {
+    text-align: center;
+    padding: 2rem 1rem;
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+
+  .results-screen.visible { display: block; }
+
+  .trophy { font-size: 4rem; margin-bottom: 1rem; }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .results-score {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    margin: 1rem 0;
+  }
+
+  .results-message {
+    color: rgba(241,237,233,0.65);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .restart-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border: none;
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.9rem 2.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,169,110,0.35); }
+
+  /* ========== REFERENCE MODE ========== */
+  .ref-section { display: none; }
+  .ref-section.active { display: block; }
+
+  .ref-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ref-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,169,110,0.18);
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .ref-card:hover { border-color: rgba(201,169,110,0.45); background: rgba(201,169,110,0.05); }
+
+  .ref-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ref-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .ref-card-num {
+    font-size: 0.7rem;
+    color: var(--gold);
+    background: rgba(201,169,110,0.12);
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+  }
+
+  .ref-card-sub {
+    font-size: 0.78rem;
+    color: rgba(241,237,233,0.4);
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+
+  .ref-card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+  }
+
+  .ref-card-body.open {
+    max-height: 600px;
+    padding-top: 1rem;
+  }
+
+  .ref-response {
+    font-size: 0.87rem;
+    line-height: 1.7;
+    color: rgba(241,237,233,0.85);
+    background: rgba(201,169,110,0.05);
+    border-left: 3px solid var(--gold);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .chevron {
+    color: var(--gold);
+    transition: transform 0.25s;
+    font-size: 0.9rem;
+  }
+
+  .ref-card.open .chevron { transform: rotate(180deg); }
+
+  footer {
+    text-align: center;
+    padding: 3rem 0 1.5rem;
+    color: rgba(241,237,233,0.2);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+
+  footer span { color: var(--gold); opacity: 0.6; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">Módulo 13 · Academia De Cero a Top Producer</div>
+    <h1>Manejo de <span>Objeciones</span></h1>
+    <p class="subtitle">Tu herramienta de respuesta inmediata con el cliente al teléfono</p>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('search')">🔍 Búsqueda Rápida</button>
+    <button class="mode-btn" onclick="setMode('game')">🎮 Practica con Juego</button>
+    <button class="mode-btn" onclick="setMode('ref')">📖 Guía Completa</button>
+  </div>
+
+  <!-- ========== SEARCH ========== -->
+  <div class="search-section active" id="searchSection">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Escribe la objeción del cliente... ej: caro, tiempo, esposa" oninput="handleSearch()" autocomplete="off">
+    </div>
+    <div class="search-hint">
+      Palabras clave: 
+      <span onclick="quickSearch('caro')">caro</span>
+      <span onclick="quickSearch('tiempo')">tiempo</span>
+      <span onclick="quickSearch('esposa')">esposa</span>
+      <span onclick="quickSearch('dinero')">dinero</span>
+      <span onclick="quickSearch('seguro')">ya tengo seguro</span>
+      <span onclick="quickSearch('joven')">muy joven</span>
+      <span onclick="quickSearch('trabajo')">trabajo / empresa</span>
+      <span onclick="quickSearch('confio')">no confío</span>
+      <span onclick="quickSearch('invertir')">invertir</span>
+      <span onclick="quickSearch('quiebra')">quiebra</span>
+      <span onclick="quickSearch('llamo')">te llamo</span>
+    </div>
+    <div id="searchResults"></div>
+    <div class="no-result" id="noResult">No encontré esa objeción. Intenta con: caro, tiempo, dinero, esposa, seguro, joven, empresa, confío, invertir...</div>
+  </div>
+
+  <!-- ========== GAME ========== -->
+  <div class="game-section" id="gameSection">
+    <div id="gamePlay">
+      <div class="game-stats">
+        <span id="questionCounter">Pregunta 1 de 10</span>
+        <span id="scoreLabel">Puntos: 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+      
+      <div class="question-card">
+        <div class="client-icon">👤</div>
+        <div class="question-number" id="questionNum">OBJECIÓN DEL CLIENTE</div>
+        <div class="client-says" id="questionText">Cargando...</div>
+      </div>
+
+      <div class="options-grid" id="optionsGrid"></div>
+      
+      <div class="feedback-box" id="feedbackBox">
+        <div class="feedback-emoji" id="feedbackEmoji"></div>
+        <div class="feedback-title" id="feedbackTitle"></div>
+        <div class="feedback-text" id="feedbackText"></div>
+      </div>
+
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Siguiente objeción →</button>
+    </div>
+
+    <div class="results-screen" id="resultsScreen">
+      <div class="trophy" id="trophyEmoji">🏆</div>
+      <div class="results-title" id="resultsTitle">¡Excelente!</div>
+      <div class="results-score" id="resultsScore">0/10</div>
+      <div class="results-message" id="resultsMessage"></div>
+      <button class="restart-btn" onclick="startGame()">Volver a Practicar</button>
+    </div>
+  </div>
+
+  <!-- ========== REFERENCE ========== -->
+  <div class="ref-section" id="refSection">
+    <div class="ref-grid" id="refGrid"></div>
+  </div>
+
+  <footer>Diana Ariza · AP Brokers by FFL America · <span>De Cero a Top Producer</span></footer>
+</div>
+
+<script>
+const OBJECTIONS = [
+  {
+    id: 1,
+    title: '"Lo tengo que pensar"',
+    keywords: ['pensar','tiempo','reflexionar','decidir','después','luego','esperar'],
+    meaning: 'Todavía tiene dudas y no sabe qué pregunta hacer.',
+    response: 'Perfecto, [Nombre], es completamente normal. Y justo por eso quiero ayudarte.\n\nCuando alguien me dice que lo tiene que pensar, normalmente es porque hay algo que todavía no le queda 100% claro.\n\n¿Te parece si identificamos qué es, lo aclaramos juntos y lo piensas con mucha más claridad?\n\n¿Es el monto? ¿Es el proceso? ¿Es el momento? ¿Qué es lo que más te genera duda?'
+  },
+  {
+    id: 2,
+    title: '"Está muy caro"',
+    keywords: ['caro','costoso','precio','mucho dinero','no puedo pagar','vale mucho'],
+    meaning: 'No ve el valor todavía.',
+    response: 'Te entiendo, [Nombre]. Es una inversión importante.\n\n¿Te parece caro comparado con qué? Porque si comparamos con no hacer nada y que tu familia quede desprotegida, o que tú no tengas ingresos si algo pasa... esto es lo más barato que puedes hacer.\n\nLa pregunta no es si puedes pagarlo. La pregunta es si puedes darte el lujo de NO tenerlo.'
+  },
+  {
+    id: 3,
+    title: '"No tengo el dinero ahorita"',
+    keywords: ['dinero','no tengo','plata','presupuesto','fondos','efectivo','ahorita'],
+    meaning: 'No ha priorizado esto todavía.',
+    response: 'Te entiendo, [Nombre]. Y justo por eso quiero que veas esto:\n\nNadie tiene el dinero "extra". Todos tenemos que elegir qué priorizamos.\n\nLa pregunta es: ¿prefieres gastar ese dinero en cosas que desaparecen, o invertirlo en algo que protege todo lo que ya construiste?\n\nEl dinero va a salir de todas formas. Solo que si algo pasa y no tienes esto, va a salir 10 veces más.'
+  },
+  {
+    id: 4,
+    title: '"Déjame hablarlo con mi esposa/esposo"',
+    keywords: ['esposa','esposo','pareja','consultar','hablar','marido','mujer','familia'],
+    meaning: 'No quiere ser el único responsable de la decisión.',
+    response: 'Perfecto, [Nombre]. Es súper importante que ambos estén alineados.\n\nDéjame preguntarte: si tu esposa estuviera aquí ahora mismo, ¿qué crees que te preguntaría antes de decidir?\n\nPerfecto. Entonces aclaremos esas dudas ahora para que cuando hables con ella, tengas todas las respuestas claras.'
+  },
+  {
+    id: 5,
+    title: '"Ya tengo un seguro"',
+    keywords: ['seguro','ya tengo','tengo uno','cubierto','póliza','cobertura'],
+    meaning: 'No sabe si esto es mejor o diferente.',
+    response: 'Qué bueno que ya tienes uno, [Nombre]. Eso muestra que piensas en proteger a tu familia.\n\nDéjame preguntarte: ¿tu seguro actual te da beneficios en vida si te enfermas? ¿Te permite retirar dinero libre de impuestos para tu jubilación?\n\nLa mayoría de los seguros tradicionales solo pagan si mueres. Este es completamente diferente.'
+  },
+  {
+    id: 6,
+    title: '"No creo en los seguros"',
+    keywords: ['no creo','no confío','seguros','fraude','engaño','estafa'],
+    meaning: 'Alguien le vendió mal antes o no entiende cómo funcionan.',
+    response: 'Te entiendo, [Nombre]. Mucha gente ha tenido malas experiencias.\n\n¿No crees en los seguros en general, o no confías en cómo te los han explicado antes?\n\nEntonces déjame mostrarte esto de manera diferente. Sin presión. Y tú decides si esto tiene sentido para ti o no.'
+  },
+  {
+    id: 7,
+    title: '"Soy muy joven para esto"',
+    keywords: ['joven','edad','años','tiempo','urgencia','mayor','viejo'],
+    meaning: 'No siente urgencia todavía.',
+    response: 'Justo por eso es el mejor momento, [Nombre].\n\nMientras más joven empieces, más barato es y más crece tu dinero. Los que esperan a tener 50 años pagan el triple y acumulan la mitad.\n\nEsto no es para cuando seas viejo. Es para que cuando seas viejo, ya lo tengas resuelto.'
+  },
+  {
+    id: 8,
+    title: '"No tengo dependientes"',
+    keywords: ['dependientes','hijos','familia','solo','soltero','no tengo familia'],
+    meaning: 'No ve quién se beneficiaría.',
+    response: 'Perfecto, [Nombre]. Y justo por eso este plan es ideal para ti.\n\nSi no tienes dependientes, este dinero lo usas TÚ para tu retiro. Esto no es solo un seguro. Es una cuenta de ahorro que crece sin pérdidas y que puedes usar cuando quieras.'
+  },
+  {
+    id: 9,
+    title: '"¿Y si me arrepiento?"',
+    keywords: ['arrepiento','arrepentir','cambiar','cancelar','salir','devolver'],
+    meaning: 'Tiene miedo de tomar una mala decisión.',
+    response: 'Te entiendo, [Nombre]. Y por eso esto tiene un período de revisión.\n\nSi en los primeros 30 días sientes que no es para ti, puedes cancelar y recuperas tu dinero.\n\n¿Te arrepentirías más de probarlo y cambiarlo, o de no hacerlo y que algo te pase sin protección?'
+  },
+  {
+    id: 10,
+    title: '"Voy a buscarlo más barato"',
+    keywords: ['barato','buscar','comparar','otra opción','mejor precio','cotizar'],
+    meaning: 'No ve por qué comprarlo con esta agente.',
+    response: 'Perfecto, [Nombre]. Está en todo tu derecho de buscar.\n\nEl más barato nunca es el mejor. Y cuando se trata de proteger a tu familia, lo último que quieres es un plan que no funcione cuando más lo necesites.\n\nYo no te estoy vendiendo precio. Te estoy ofreciendo tranquilidad.'
+  },
+  {
+    id: 11,
+    title: '"No entiendo bien cómo funciona"',
+    keywords: ['entender','entiendo','explicar','complicado','no sé','cómo funciona'],
+    meaning: 'Necesita una explicación más simple.',
+    response: 'Perfecto, [Nombre]. Déjame explicártelo en una frase:\n\nSi algo te pasa, tu familia recibe dinero. Si te enfermas, TÚ recibes dinero. Si no pasa nada, ese dinero crece y lo usas para tu retiro.\n\n¿Eso tiene sentido?'
+  },
+  {
+    id: 12,
+    title: '"Ahora no es el momento"',
+    keywords: ['momento','ahora','después','luego','esperar','tiempo','ocupado'],
+    meaning: 'Siente que puede hacerlo después.',
+    response: 'Te entiendo, [Nombre]. Pero déjame preguntarte algo:\n\n¿Cuándo SÍ va a ser el momento? La vida no avisa. Y lo que hoy puedes resolver con $X al mes, mañana puede costarte miles o puede que ya no califiques.\n\nEl mejor momento siempre es antes de que lo necesites.'
+  },
+  {
+    id: 13,
+    title: '"Mi empresa ya me da seguro"',
+    keywords: ['empresa','trabajo','empleo','compañía','empleador','jefe','beneficios','laboral'],
+    meaning: 'Cree que ya está cubierto.',
+    response: 'Qué bueno, [Nombre]. Pero déjame preguntarte:\n\n¿Qué pasa si cambias de trabajo? ¿Qué pasa si te despiden? ¿Qué pasa si decides emprender?\n\nEl seguro de tu empresa es temporal. Este es tuyo para siempre.'
+  },
+  {
+    id: 14,
+    title: '"No confío en las aseguradoras"',
+    keywords: ['confiar','confío','aseguradora','compañía','no pagan','mentira'],
+    meaning: 'Ha escuchado historias negativas sobre aseguradoras.',
+    response: 'Te entiendo, [Nombre]. Hay muchas historias malas.\n\n¿Prefieres no tener nada y que tu familia lo pierda todo si algo pasa, o tener algo que aunque no sea perfecto, les da protección?\n\nAdemás, este plan está respaldado por una compañía con calificación A+ que lleva décadas en el mercado y ha pagado millones en beneficios.'
+  },
+  {
+    id: 15,
+    title: '"Prefiero invertir en otra cosa"',
+    keywords: ['invertir','inversión','acciones','negocios','bienes raíces','cripto','otra'],
+    meaning: 'No ve esto como una buena inversión.',
+    response: 'Perfecto, [Nombre]. ¿En qué estás pensando invertir?\n\nTiene sentido. Pero déjame preguntarte: ¿esa inversión te protege si algo te pasa? ¿Te da ingresos si te enfermas? ¿Está libre de impuestos?\n\nEsto no es una inversión tradicional. Es una inversión con protección.'
+  },
+  {
+    id: 16,
+    title: '"Mi familia puede arreglárselas"',
+    keywords: ['arreglar','solos','sin mí','independientes','familia fuerte','no necesitan'],
+    meaning: 'Minimiza la necesidad de protección.',
+    response: 'Puede ser, [Nombre]. Pero déjame preguntarte:\n\n¿Quieres que se "arreglen" o quieres que estén bien?\n\nPorque una cosa es sobrevivir y otra es vivir con tranquilidad.'
+  },
+  {
+    id: 17,
+    title: '"Tengo otras prioridades"',
+    keywords: ['prioridades','prioridad','otras cosas','primero','importante','urgente'],
+    meaning: 'No posiciona esto como urgente.',
+    response: 'Te entiendo, [Nombre]. Todos tenemos prioridades.\n\nPero déjame preguntarte: ¿qué es más prioritario que proteger todo lo que ya tienes?\n\nSi algo pasa y no tienes esto, todas tus otras prioridades se caen.'
+  },
+  {
+    id: 18,
+    title: '"No me gustan los compromisos largos"',
+    keywords: ['compromiso','largo plazo','años','atado','contrato','permanente','flexible'],
+    meaning: 'Quiere sentir libertad y control.',
+    response: 'Te entiendo, [Nombre]. Nadie quiere sentirse atrapado.\n\n¿No te gusta comprometerte a estar protegido? ¿A tener tranquilidad?\n\nEsto no es un compromiso que te quita libertad. Es un compromiso que te da libertad.'
+  },
+  {
+    id: 19,
+    title: '"¿Y si la compañía quiebra?"',
+    keywords: ['quiebra','quebrar','desaparecer','compañía','garantía','respaldo','seguro'],
+    meaning: 'Tiene miedo de perder su dinero.',
+    response: 'Excelente pregunta, [Nombre]. Eso habla bien de ti.\n\nLas aseguradoras están reguladas por el estado y tienen reservas obligatorias. Esta compañía tiene calificación A+ y lleva décadas en el mercado.\n\nEs más probable que tu banco quiebre que esta compañía.'
+  },
+  {
+    id: 20,
+    title: '"Voy a pensarlo y te llamo"',
+    keywords: ['llamo','llame','llamas','contacto','después te','mañana','te escribo'],
+    meaning: 'Quiere terminar la conversación.',
+    response: 'Perfecto, [Nombre]. Solo déjame preguntarte:\n\n¿Qué específicamente quieres pensar? Porque si hay algo que todavía no te queda claro, prefiero aclarártelo ahora.\n\nNo quiero que pierdas tiempo pensando en algo que podemos resolver en 2 minutos.'
+  }
+];
+
+// ========== STATE ==========
+let currentMode = 'search';
+let gameQuestions = [];
+let gameIndex = 0;
+let gameScore = 0;
+let answered = false;
+
+// ========== MODE SWITCH ==========
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['search','game','ref'][i] === mode);
+  });
+  document.getElementById('searchSection').classList.toggle('active', mode === 'search');
+  document.getElementById('gameSection').classList.toggle('active', mode === 'game');
+  document.getElementById('refSection').classList.toggle('active', mode === 'ref');
+
+  if (mode === 'game') startGame();
+  if (mode === 'ref') buildRef();
+}
+
+// ========== SEARCH ==========
+function quickSearch(q) {
+  document.getElementById('searchInput').value = q;
+  handleSearch();
+}
+
+function handleSearch() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const container = document.getElementById('searchResults');
+  const noResult = document.getElementById('noResult');
+  container.innerHTML = '';
+  noResult.classList.remove('visible');
+
+  if (!query || query.length < 2) return;
+
+  const matches = OBJECTIONS.filter(obj => {
+    return obj.keywords.some(k => k.includes(query) || query.includes(k)) ||
+           obj.title.toLowerCase().includes(query) ||
+           obj.meaning.toLowerCase().includes(query);
+  });
+
+  if (matches.length === 0) {
+    noResult.classList.add('visible');
+    return;
+  }
+
+  matches.forEach(obj => {
+    const card = document.createElement('div');
+    card.className = 'result-card visible';
+    card.innerHTML = `
+      <div class="objection-label">⚡ Objeción #${obj.id}</div>
+      <div class="objection-title">${obj.title}</div>
+      <div class="objection-subtext">Lo que realmente significa: "${obj.meaning}"</div>
+      <div class="response-label">🎯 Tu Respuesta Ideal</div>
+      <div class="response-text">${obj.response.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</div>
+      <button class="copy-btn" onclick="copyText(this, \`${obj.response.replace(/`/g,'\\`')}\`)">📋 Copiar respuesta</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copiar respuesta'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ========== GAME ==========
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function startGame() {
+  gameQuestions = shuffle(OBJECTIONS).slice(0, 10);
+  gameIndex = 0;
+  gameScore = 0;
+  answered = false;
+  document.getElementById('resultsScreen').classList.remove('visible');
+  document.getElementById('gamePlay').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = gameQuestions[gameIndex];
+  answered = false;
+
+  document.getElementById('questionCounter').textContent = `Pregunta ${gameIndex + 1} de 10`;
+  document.getElementById('scoreLabel').textContent = `Puntos: ${gameScore}`;
+  document.getElementById('progressFill').style.width = `${((gameIndex + 1) / 10) * 100}%`;
+  document.getElementById('questionNum').textContent = `EL CLIENTE TE DICE...`;
+  document.getElementById('questionText').textContent = q.title;
+
+  document.getElementById('feedbackBox').classList.remove('visible', 'correct-fb', 'wrong-fb');
+  document.getElementById('nextBtn').classList.remove('visible');
+
+  // Generate options: correct + 3 random wrong
+  const wrong = shuffle(OBJECTIONS.filter(o => o.id !== q.id)).slice(0, 3);
+  const allOptions = shuffle([q, ...wrong]);
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  allOptions.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    // Show first 80 chars of response
+    const preview = opt.response.replace(/\n/g, ' ').substring(0, 100) + '...';
+    btn.textContent = preview;
+    btn.onclick = () => selectAnswer(btn, opt.id === q.id, q, opt);
+    grid.appendChild(btn);
+  });
+}
+
+function selectAnswer(btn, isCorrect, question, chosen) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => { b.disabled = true; });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.classList.remove('correct-fb', 'wrong-fb');
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    gameScore++;
+    document.getElementById('scoreLabel').textContent = `Puntos: ${gameScore}`;
+    fb.classList.add('visible', 'correct-fb');
+    document.getElementById('feedbackEmoji').textContent = '🎯';
+    document.getElementById('feedbackTitle').textContent = '¡Correcto! Esa es la mejor respuesta.';
+    document.getElementById('feedbackText').textContent = question.response.substring(0, 180) + '...';
+  } else {
+    btn.classList.add('wrong');
+    // Highlight correct
+    const correct = question.response.replace(/\n/g, ' ').substring(0, 100) + '...';
+    allBtns.forEach(b => {
+      if (b.textContent.trim() === correct) b.classList.add('correct');
+    });
+    fb.classList.add('visible', 'wrong-fb');
+    document.getElementById('feedbackEmoji').textContent = '💡';
+    document.getElementById('feedbackTitle').textContent = 'No era esa. La respuesta correcta es:';
+    document.getElementById('feedbackText').textContent = question.response.substring(0, 200) + '...';
+  }
+
+  document.getElementById('nextBtn').textContent = gameIndex < 9 ? 'Siguiente objeción →' : 'Ver resultados 🏆';
+  document.getElementById('nextBtn').classList.add('visible');
+}
+
+function nextQuestion() {
+  gameIndex++;
+  if (gameIndex >= 10) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('gamePlay').style.display = 'none';
+  const screen = document.getElementById('resultsScreen');
+  screen.classList.add('visible');
+
+  const pct = (gameScore / 10) * 100;
+  let emoji, title, msg;
+
+  if (pct === 100) {
+    emoji = '🏆'; title = '¡Eres Top Producer!';
+    msg = 'Perfecto. Conoces todas las objeciones y sabes exactamente cómo responderlas. ¡Tu equipo te necesita!';
+  } else if (pct >= 80) {
+    emoji = '🌟'; title = '¡Excelente Dominio!';
+    msg = 'Casi perfecto. Practica las que fallaste y estarás lista para cualquier cliente.';
+  } else if (pct >= 60) {
+    emoji = '💪'; title = '¡Buen Progreso!';
+    msg = 'Vas bien. Sigue practicando las objeciones más comunes y tu tasa de cierre va a subir.';
+  } else {
+    emoji = '📚'; title = 'Sigue Practicando';
+    msg = 'Cada objeción que dominas es un cliente más cerrado. Revisa la Guía Completa y vuelve a intentarlo.';
+  }
+
+  document.getElementById('trophyEmoji').textContent = emoji;
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('resultsScore').textContent = `${gameScore}/10`;
+  document.getElementById('resultsMessage').textContent = msg;
+}
+
+// ========== REFERENCE ==========
+function buildRef() {
+  const grid = document.getElementById('refGrid');
+  if (grid.children.length > 0) return;
+
+  OBJECTIONS.forEach(obj => {
+    const card = document.createElement('div');
+    card.className = 'ref-card';
+    card.innerHTML = `
+      <div class="ref-card-header" onclick="toggleRef(this.closest('.ref-card'))">
+        <div>
+          <div class="ref-card-title">${obj.title}</div>
+          <div class="ref-card-sub">"${obj.meaning}"</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <span class="ref-card-num">#${obj.id}</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-response">${obj.response.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleRef(card) {
+  const body = card.querySelector('.ref-card-body');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.ref-card-body.open').forEach(b => {
+    b.classList.remove('open');
+    b.closest('.ref-card').classList.remove('open');
+  });
+  if (!isOpen) {
+    body.classList.add('open');
+    card.classList.add('open');
+  }
+}
+</script>
+</body>
+</html>
