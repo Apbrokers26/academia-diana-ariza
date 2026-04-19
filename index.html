@@ -848,7 +848,7 @@ function renderQ() {
         if (box) {
           box.classList.add('survey-fade-out');
           setTimeout(function() {
-            nextQ();
+            nextQ(); // nextQ maneja los avisos y llama advanceQuestion internamente
             if (box) {
               box.classList.remove('survey-fade-out');
               box.classList.add('survey-fade-in');
@@ -876,30 +876,108 @@ function renderQ() {
     nBtn.style.display = 'none';
   }
 }
+// Avisos ya mostrados para no repetirlos
+var warningShown = {};
+
 function nextQ() {
-  const chosen = answers[DISC_Q[curQ].id];
+  var chosen = answers[DISC_Q[curQ].id];
   if (!chosen) return;
+
+  var qId = DISC_Q[curQ].id;
+
+  // Avisos para Q8 (horas) y Q10 (leads) cuando responden C o D
+  if (chosen.db && !warningShown[qId]) {
+    warningShown[qId] = true;
+
+    var isQ8 = (qId === 8);
+    var title = isQ8
+      ? "Antes de continuar..."
+      : "Importante que consideres esto...";
+    var msg = isQ8
+      ? "La condicion minima para que puedas tener exito en este negocio es dedicarle <strong>minimo 20 horas semanales</strong> (part time).<br><br>Si no estas dispuesto/a a darle este tiempo a este proyecto, va a ser muy dificil ayudarte a lograr resultados consistentes.<br><br>Te invitamos a reflexionar si este es realmente tu momento. Puedes cambiar tu respuesta o continuar de todas formas."
+      : "Si no estas dispuesto/a a invertir en leads... <strong>¿como piensas conseguir los potenciales para tener resultados?</strong><br><br>¿Tienes otra forma de hacerlo? De ser asi podrias intentarlo, pero va a ser muy dificil ayudarte a lograr resultados consistentes — y vamos a perder el tiempo ambos intentandolo.<br><br>Puedes cambiar tu respuesta o continuar de todas formas.";
+
+    var modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    modal.innerHTML = '<div style="background:#fff;border-radius:20px;padding:28px 24px;max-width:420px;width:100%;text-align:center">' +
+      '<div style="font-size:36px;margin-bottom:10px">⚠️</div>' +
+      '<h3 style="font-family:serif;color:#0A1628;font-size:18px;margin-bottom:12px">' + title + '</h3>' +
+      '<p style="color:#4A5568;font-size:13px;line-height:1.7;margin-bottom:20px;text-align:left">' + msg + '</p>' +
+      '<div style="display:flex;flex-direction:column;gap:10px">' +
+      '<button id="warn-change" style="background:linear-gradient(135deg,#0A1628,#132F6B);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer">Cambiar mi respuesta</button>' +
+      '<button id="warn-continue" style="background:#FAF7F0;border:1.5px solid #F0EBE0;border-radius:10px;padding:12px;font-size:13px;color:#7A8FA6;cursor:pointer">Continuar de todas formas</button>' +
+      '</div></div>';
+    document.body.appendChild(modal);
+
+    document.getElementById('warn-change').onclick = function() {
+      modal.remove();
+      // Limpiar la respuesta de esta pregunta para que pueda cambiarla
+      delete answers[qId];
+      warningShown[qId] = false;
+      // Rehabilitar los botones de la pregunta
+      var optsDiv = document.getElementById('q-opts');
+      if (optsDiv) {
+        optsDiv.querySelectorAll('.answer-btn').forEach(function(b) {
+          b.style.pointerEvents = 'auto';
+          b.classList.remove('selected');
+        });
+      }
+    };
+
+    document.getElementById('warn-continue').onclick = function() {
+      modal.remove();
+      // Marcar como dealbreaker confirmado
+      hasDealbreaker = true;
+      // Continuar con el flujo normal
+      advanceQuestion();
+    };
+    return; // Esperar decision del usuario
+  }
+
   if (chosen.db) hasDealbreaker = true;
-  if (curQ < DISC_Q.length - 1) { curQ++; renderQ(); }
-  else {
-    let total = 0;
+  advanceQuestion();
+}
+
+function advanceQuestion() {
+  var chosen = answers[DISC_Q[curQ].id];
+  if (curQ < DISC_Q.length - 1) {
+    curQ++;
+    renderQ();
+  } else {
+    var total = 0;
     Object.values(answers).forEach(function(a) { total += (a.s || 0); });
-    const raw = Math.round((total / (DISC_Q.length * 10)) * 100);
-    const score = hasDealbreaker ? Math.min(raw, 44) : Math.min(raw, 100);
-    const answersText = DISC_Q.map(function(q) { var a = answers[q.id]; return a ? q.q + ' → ' + a.l + ') ' + a.t : ''; }).join(' | ');
-    pingFull({...leadData, score, answers: answersText, stage: `Completó quiz DISC — ${score}%`});
-    showResult(score);
+    var raw = Math.round((total / (DISC_Q.length * 10)) * 100);
+    // Ya NO descalificamos automáticamente - dejamos pasar con puntaje real
+    var score = Math.min(raw, 100);
+    var answersText = DISC_Q.map(function(q) { var a = answers[q.id]; return a ? q.q + ' > ' + a.l + ') ' + a.t : ''; }).join(' | ');
+    var stage = 'Completo quiz DISC ' + score + '%';
+    if (hasDealbreaker) stage += ' — PERFIL CON ALERTAS (tiempo o leads)';
+    pingFull(Object.assign({}, leadData, {score: score, answers: answersText, stage: stage}));
+    showResult(score, hasDealbreaker);
   }
 }
 
 // ── RESULT ──
-function showResult(score) {
-  const isTop = score >= 75, isMid = score >= 45;
+function showResult(score, withAlerts) {
+  var isTop = score >= 75, isMid = score >= 45;
   if (isTop || isMid) {
     document.getElementById('video-iframe').src = VIDEO_URL;
     show('videow');
-    const label = isTop ? '[Top] CONTRATAR CON PRIORIDAD' : '[Nuevo] CONTRATAR CON ACOMPAÑAMIENTO';
-    document.getElementById('video-badge').textContent = label;
+    var label;
+    if (withAlerts) {
+      label = 'PERFIL CON ALERTAS — NO QUIERE INVERTIR TIEMPO NI EN LEADS';
+    } else if (isTop) {
+      label = 'PERFIL TOP PRODUCER — CONTRATAR CON PRIORIDAD';
+    } else {
+      label = 'PERFIL PROMETEDOR — CONTRATAR CON ACOMPAÑAMIENTO';
+    }
+    var badge = document.getElementById('video-badge');
+    badge.textContent = label;
+    if (withAlerts) {
+      badge.style.background = 'rgba(231,76,60,0.15)';
+      badge.style.color = '#E74C3C';
+      badge.style.border = '1px solid rgba(231,76,60,0.3)';
+    }
     setTimeout(function() { document.getElementById('calendly-section').classList.remove('hidden'); }, 8000);
     return;
   }
