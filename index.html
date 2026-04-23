@@ -435,7 +435,11 @@ const DISC_Q = [
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Evaluación DISC de perfil antes de ingresar</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Avanza a tu medida — tu progreso guardado con tu nombre</span></div>
     </div>
-    <button class="btn btn-gold" onclick="show('leadform')" style="font-size:20px;padding:22px 36px;letter-spacing:2px;text-transform:uppercase;font-weight:900;border-radius:16px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8C96A,#D4A843)">QUIERO SER PARTE DEL EQUIPO</button>
+    <button class="btn btn-gold" 
+onclick="fbq('track', 'Lead'); show('leadform')" 
+style="font-size:20px;padding:22px 36px;letter-spacing:2px;text-transform:uppercase;font-weight:900;border-radius:16px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8C96A,#D4A843)">
+  QUIERO SER PARTE DEL EQUIPO
+</button>
     <button class="btn btn-ghost" onclick="toggleCode()">Ya hago parte del equipo</button>
     <div id="code-panel" class="hidden code-box">
       <p style="color:#D4A843;font-size:12px;font-weight:700;margin-bottom:8px">Ingresa tu nombre y codigo de acceso:</p>
