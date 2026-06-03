@@ -200,7 +200,7 @@ export default function Dashboard({ onAddTx }) {
               <p className="text-white/70 text-[11px]">Asesora de Seguros de Vida</p>
             </div>
             <a
-              href="https://wa.me/573000000000?text=Hola%20Diana%2C%20vi%20tu%20app%20de%20gastos%20y%20quiero%20saber%20m%C3%A1s%20sobre%20protecci%C3%B3n%20financiera"
+              href="https://wa.me/17708654304?text=Hi%20Diana%2C%20I%20saw%20your%20expense%20app%20and%20I%27d%20like%20to%20know%20more%20about%20financial%20protection"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl text-primary-700
