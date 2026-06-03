@@ -6,7 +6,14 @@ import { formatCurrency, formatDate } from '../utils/dateHelpers'
 import WalletCard from './WalletCard'
 import DonutChart from './DonutChart'
 
-export default function Dashboard({ onAddTx }) {
+const greeting = () => {
+  const h = new Date().getHours()
+  if (h < 12) return 'Buenos días 🌅'
+  if (h < 19) return 'Buenas tardes ☀️'
+  return 'Buenas noches 🌙'
+}
+
+export default function Dashboard({ onAddTx, onGoToTx }) {
   const { wallets, transactions, categories, settings } = useApp()
   const { hidden } = usePrivacy()
   const { currentMonth } = settings
@@ -28,6 +35,7 @@ export default function Dashboard({ onAddTx }) {
     <div className="space-y-4 pb-4">
       {/* ── Total balance hero ─────────────────────────────── */}
       <div className="mx-4 mt-4 rounded-2xl bg-primary-600 dark:bg-primary-800 p-5 text-white shadow-lg">
+        <p className="text-xs font-medium opacity-70 mb-0.5">{greeting()}</p>
         <p className="text-sm font-medium opacity-80 mb-1">Saldo acumulado total</p>
         <p className="text-4xl font-extrabold tracking-tight">
           {formatCurrency(totalBalance, hidden)}
@@ -96,7 +104,7 @@ export default function Dashboard({ onAddTx }) {
           </h2>
           <div className="flex gap-4 items-center">
             <div className="flex-shrink-0">
-              <DonutChart data={breakdown} size={160} stroke={32} />
+              <DonutChart data={breakdown} size={160} stroke={32} hidden={hidden} />
             </div>
             <div className="flex-1 space-y-2 min-w-0">
               {breakdown.slice(0, 5).map(item => (
@@ -124,6 +132,14 @@ export default function Dashboard({ onAddTx }) {
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             Movimientos recientes
           </h2>
+          {recent.length > 0 && (
+            <button
+              onClick={onGoToTx}
+              className="text-xs text-primary-600 dark:text-primary-400 font-medium"
+            >
+              Ver todos →
+            </button>
+          )}
         </div>
 
         {recent.length === 0 ? (
@@ -200,7 +216,7 @@ export default function Dashboard({ onAddTx }) {
               <p className="text-white/70 text-[11px]">Asesora de Seguros de Vida</p>
             </div>
             <a
-              href="https://wa.me/17708654304?text=Hi%20Diana%2C%20I%20saw%20your%20expense%20app%20and%20I%27d%20like%20to%20know%20more%20about%20financial%20protection"
+              href="https://wa.me/17708654304?text=Hola%20Diana%2C%20vi%20tu%20app%20de%20gastos%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20protecci%C3%B3n%20financiera"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl text-primary-700

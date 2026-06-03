@@ -47,7 +47,7 @@ function Inner() {
 
       {/* ── Main content ─────────────────────────────────── */}
       <main className="flex-1 overflow-y-auto pb-20">
-        {view === 'dashboard'    && <Dashboard    onAddTx={openAdd} />}
+        {view === 'dashboard'    && <Dashboard    onAddTx={openAdd} onGoToTx={() => setView('transactions')} />}
         {view === 'transactions' && <TransactionList onEdit={openEdit} />}
         {view === 'wallets'      && <WalletsView />}
         {view === 'settings'     && <SettingsPanel />}

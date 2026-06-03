@@ -32,7 +32,7 @@ export const getMonthFromDate = (dateStr) => dateStr.substring(0, 7)
 
 export const formatDate = (dateStr) => {
   const d = new Date(dateStr + 'T00:00:00')
-  return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+  return d.toLocaleDateString('es', { day: 'numeric', month: 'short' })
 }
 
 export const formatCurrency = (amount, hidden = false) => {

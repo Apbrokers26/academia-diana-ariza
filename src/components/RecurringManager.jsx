@@ -119,7 +119,7 @@ export default function RecurringManager() {
                       className="text-xs px-2 py-1 bg-primary-100 dark:bg-primary-900/30
                         text-primary-700 dark:text-primary-300 rounded-lg font-medium"
                     >
-                      ↻ mes
+                      + Agregar este mes
                     </button>
                     <div className="flex gap-1">
                       <button onClick={() => openEdit(r)}

@@ -1,6 +1,8 @@
-export default function DonutChart({ data = [], size = 180, stroke = 36 }) {
-  const R   = (size - stroke) / 2
-  const C   = size / 2
+import { formatCurrency } from '../utils/dateHelpers'
+
+export default function DonutChart({ data = [], size = 180, stroke = 36, hidden = false }) {
+  const R    = (size - stroke) / 2
+  const C    = size / 2
   const circ = 2 * Math.PI * R
 
   const total = data.reduce((s, d) => s + d.amount, 0)
@@ -13,6 +15,14 @@ export default function DonutChart({ data = [], size = 180, stroke = 36 }) {
     return seg
   })
 
+  // Format compact: $1.2k, $12k, $1.2M
+  const compact = (v) => {
+    if (hidden) return '••••'
+    if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(1)}M`
+    if (v >= 1_000)     return `$${(v / 1_000).toFixed(1)}k`
+    return `$${v.toFixed(0)}`
+  }
+
   return (
     <svg
       width={size}
@@ -20,7 +30,7 @@ export default function DonutChart({ data = [], size = 180, stroke = 36 }) {
       viewBox={`0 0 ${size} ${size}`}
       className="block"
     >
-      {/* Background track */}
+      {/* Track de fondo */}
       <circle
         cx={C} cy={C} r={R}
         fill="none"
@@ -29,7 +39,7 @@ export default function DonutChart({ data = [], size = 180, stroke = 36 }) {
         className="text-gray-100 dark:text-gray-700"
       />
 
-      {segments.length === 0 ? null : segments.map(seg => (
+      {segments.map(seg => (
         <circle
           key={seg.id}
           cx={C} cy={C} r={R}
@@ -42,26 +52,25 @@ export default function DonutChart({ data = [], size = 180, stroke = 36 }) {
         />
       ))}
 
-      {/* Centre label */}
+      {/* Monto total en el centro */}
       <text
-        x={C} y={C - 6}
+        x={C} y={C - 5}
         textAnchor="middle"
-        fontSize="11"
-        fontWeight="700"
+        fontSize="13"
+        fontWeight="800"
         fontFamily="Inter, sans-serif"
         fill="#111827"
-        className="dark:fill-white"
       >
-        {total > 0 ? `${Math.round(data[0]?.pct ?? 0)}%` : '–'}
+        {compact(total)}
       </text>
       <text
-        x={C} y={C + 10}
+        x={C} y={C + 11}
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, sans-serif"
         fill="#6b7280"
       >
-        gastos
+        en gastos
       </text>
     </svg>
   )
