@@ -1,0 +1,20 @@
+{
+  "name": "GastosFácil — Control de gastos",
+  "short_name": "GastosFácil",
+  "description": "Controla tus gastos personales con múltiples bolsillos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "orientation": "portrait",
+  "lang": "es",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
