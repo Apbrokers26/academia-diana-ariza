@@ -14,7 +14,7 @@ export function AppProvider({ children }) {
   const [settings,     setSettings]     = useState({
     privacyMode: false,
     darkMode:    false,
-    currency:    'COP',
+    currency:    'USD',
     currentMonth: getCurrentMonth()
   })
   const [ready, setReady] = useState(false)

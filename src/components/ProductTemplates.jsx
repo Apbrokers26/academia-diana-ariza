@@ -61,7 +61,7 @@ export default function ProductTemplates() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t.name}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    ${t.price.toLocaleString('es-CO')} / {t.unit}
+                    ${t.price.toFixed(2)} / {t.unit}
                     {wallet && ` · ${wallet.icon} ${wallet.name}`}
                   </p>
                 </div>
@@ -115,7 +115,7 @@ export default function ProductTemplates() {
               <div className="flex gap-3">
                 <div className="flex-1">
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                    Precio (COP)
+                    Price (USD)
                   </label>
                   <input
                     type="number"

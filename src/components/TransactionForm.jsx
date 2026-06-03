@@ -161,7 +161,7 @@ export default function TransactionForm({ transaction = null, onClose }) {
                           >
                             <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{tpl.name}</p>
                             <p className="text-xs text-primary-600 dark:text-primary-400">
-                              ${tpl.price.toLocaleString('es-CO')} / {tpl.unit}
+                              ${tpl.price.toFixed(2)} / {tpl.unit}
                             </p>
                           </button>
                         ))}
@@ -174,7 +174,7 @@ export default function TransactionForm({ transaction = null, onClose }) {
               {/* Amount */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">
-                  Monto (COP)
+                  Monto (USD)
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">$</span>
