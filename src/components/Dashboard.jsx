@@ -176,6 +176,46 @@ export default function Dashboard({ onAddTx }) {
           </div>
         )}
       </div>
+
+      {/* ── Diana Ariza advisor card ─────────────────────── */}
+      <div className="mx-4">
+        <div className="rounded-2xl overflow-hidden shadow-sm"
+          style={{ background: 'linear-gradient(135deg, #14532d 0%, #16a34a 100%)' }}>
+          <div className="px-4 pt-4 pb-3 flex items-start gap-3">
+            <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-2xl flex-shrink-0">
+              🛡️
+            </div>
+            <div className="flex-1">
+              <p className="text-white text-sm font-bold leading-tight">
+                ¿Ya tienes un plan para proteger estos ingresos?
+              </p>
+              <p className="text-white/80 text-xs mt-1 leading-snug">
+                Un seguro de vida bien estructurado puede proteger a tu familia si algo te pasa. Hablemos sin compromiso.
+              </p>
+            </div>
+          </div>
+          <div className="px-4 pb-4 flex items-center justify-between">
+            <div>
+              <p className="text-white text-xs font-bold">Diana Ariza</p>
+              <p className="text-white/70 text-[11px]">Asesora de Seguros de Vida</p>
+            </div>
+            <a
+              href="https://wa.me/573000000000?text=Hola%20Diana%2C%20vi%20tu%20app%20de%20gastos%20y%20quiero%20saber%20m%C3%A1s%20sobre%20protecci%C3%B3n%20financiera"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl text-primary-700
+                text-xs font-bold shadow-sm hover:bg-primary-50 transition-colors"
+            >
+              <span>💬</span> Escríbeme
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <p className="text-center text-[11px] text-gray-300 dark:text-gray-600 pb-2">
+        💚 Herramienta gratuita creada por Diana Ariza · Asesora de Seguros de Vida
+      </p>
     </div>
   )
 }
