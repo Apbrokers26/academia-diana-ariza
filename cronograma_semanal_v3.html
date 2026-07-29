@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cronograma Semanal — Agentes Nuevos — Golden Trust</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1020;
+    --navy2:#101A38;
+    --gold:#D9A340;
+    --gold-light:#F3CE73;
+    --gold-deep:#B9822B;
+    --cream:#FBF3DE;
+    --lav:#EDEAF3;
+    --coral:#FF5A5F;
+    --coffee:#C88A3D;
+    --ink:#1D1A2B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--navy);
+    color:#fff;
+    padding:26px 12px 46px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  .header{
+    position:relative;overflow:hidden;
+    border-radius:20px;
+    padding:30px 20px 26px;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(217,163,64,.22), transparent 55%),
+      linear-gradient(160deg, var(--navy2), var(--navy) 75%);
+    border:1.5px solid rgba(217,163,64,.55);
+    margin-bottom:20px;
+  }
+  .logo{
+    width:56px;height:56px;border-radius:50%;margin:0 auto 10px;
+    background:radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 60%, #8a6116 100%);
+    display:flex;align-items:center;justify-content:center;font-size:24px;
+    box-shadow:0 0 24px rgba(217,163,64,.5);
+  }
+  .eyebrow{color:var(--gold-light);font-size:11px;letter-spacing:5px;font-weight:800;}
+  h1{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(24px,4.4vw,36px);margin:8px 0 2px;}
+  h1 span{color:var(--gold);}
+  .sub{color:#C9B98A;font-size:13px;letter-spacing:1px;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+    margin-bottom:18px;
+  }
+  .legend .tag{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;color:#C9B98A;background:rgba(255,255,255,.05);
+    border:1px solid rgba(217,163,64,.3);padding:5px 10px;border-radius:99px;
+  }
+  .legend .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+  .table-scroll{overflow-x:auto;border-radius:16px;border:1.5px solid rgba(217,163,64,.4);}
+  table{border-collapse:collapse;width:100%;min-width:920px;background:var(--navy2);}
+  th, td{
+    padding:10px 9px;text-align:center;vertical-align:middle;
+    border:1px solid rgba(217,163,64,.18);
+    font-size:11.5px;line-height:1.4;
+  }
+  thead th{
+    background:linear-gradient(160deg,#151F42,#0D1530);
+    color:var(--gold-light);font-family:'Playfair Display',serif;
+    font-size:13px;letter-spacing:2px;padding:12px 8px;
+    border-bottom:2px solid var(--gold);
+  }
+  td.hora{
+    background:#0D1530;color:var(--gold-light);font-weight:800;
+    font-size:11.5px;white-space:nowrap;min-width:100px;
+  }
+  .cell{border-radius:10px;padding:8px 6px;}
+  .blk{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .blk .ic{font-size:15px;}
+  .blk .nm{font-weight:800;}
+  .blk .pl{font-size:10px;opacity:.85;}
+  .badge-new{
+    display:inline-block;margin-top:3px;font-size:8.5px;font-weight:800;
+    letter-spacing:.5px;background:var(--coral);color:#fff;
+    padding:1.5px 6px;border-radius:99px;
+  }
+  .extra{
+    margin-top:5px;padding-top:5px;border-top:1px dashed rgba(255,255,255,.35);
+    font-size:9.5px;line-height:1.35;
+  }
+  .extra a{color:#fff;font-weight:800;text-decoration:underline;}
+
+  /* block color families */
+  .c-lectura{background:linear-gradient(160deg,#F3CE73,#D9A340);color:#2A1E05;}
+  .c-entren{background:linear-gradient(160deg,#152058,#0A1230);color:#F3CE73;}
+  .c-temas{background:linear-gradient(160deg,#F0C25A,#C88A3D);color:#2A1E05;}
+  .c-reunion{background:linear-gradient(160deg,#FF7A7F,#E63946);color:#fff;}
+  .c-llamadas{background:linear-gradient(160deg,#101A38,#050A18);color:#F3CE73;}
+  .c-descanso{background:#EDEAF3;color:#4A4560;}
+  .c-soporte{background:linear-gradient(160deg,#E0AE68,#C88A3D);color:#2A1E05;}
+  .c-trabajo{background:linear-gradient(160deg,#1B2A5C,#0D1530);color:#F3CE73;}
+
+  .links{
+    margin-top:22px;
+    background:linear-gradient(160deg, var(--navy2), var(--navy));
+    border-radius:16px;padding:20px 22px;
+    border:1.5px solid var(--gold);
+  }
+  .links h3{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:16px;margin-bottom:14px;}
+  .link-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(217,163,64,.18);flex-wrap:wrap;gap:6px;}
+  .link-row:last-child{border-bottom:none;}
+  .link-row .lbl{font-size:12.5px;color:#D8CBA9;}
+  .link-row a{color:var(--gold-light);font-weight:800;font-size:12px;text-decoration:none;background:rgba(217,163,64,.14);padding:5px 12px;border-radius:99px;border:1px solid var(--gold);}
+  .code{font-family:monospace;background:rgba(0,0,0,.3);padding:2px 8px;border-radius:6px;color:var(--gold-light);font-size:11px;}
+  .footer{text-align:center;margin-top:18px;color:#7A7264;font-size:11px;}
+
+  @media print{
+    body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">🌳</div>
+    <div class="eyebrow">AGENTES NUEVOS · AP FINANCIAL GROUP</div>
+    <h1>Cronograma <span>Semanal</span></h1>
+    <div class="sub">Diana Ariza · Horario Top Producer</div>
+  </div>
+
+  <div class="legend">
+    <div class="tag"><span class="dot" style="background:#D9A340"></span> Lectura / Metas / Soporte</div>
+    <div class="tag"><span class="dot" style="background:#0A1230"></span> Entrenamiento / Llamadas / Trabajo</div>
+    <div class="tag"><span class="dot" style="background:#EDEAF3"></span> Descanso</div>
+    <div class="tag"><span class="dot" style="background:#E63946"></span> Nuevo</div>
+  </div>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>HORARIOS</th>
+        <th>LUNES</th>
+        <th>MARTES</th>
+        <th>MIÉRCOLES</th>
+        <th>JUEVES</th>
+        <th>VIERNES</th>
+        <th>SÁBADO</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ROW 1 : 8:30-9:00 -->
+      <tr>
+        <td class="hora">8:30 – 9:00 AM</td>
+        <td><div class="cell c-lectura blk"><span class="ic">📖</span><span class="nm">Lectura + Mentalidad</span><span class="pl">Sala Diana Ariza</span></div></td>
+        <td><div class="cell c-lectura blk"><span class="ic">📖</span><span class="nm">Lectura + Mentalidad</span><span class="pl">Sala Diana Ariza</span></div></td>
+        <td><div class="cell c-lectura blk"><span class="ic">📖</span><span class="nm">Lectura + Mentalidad</span><span class="pl">Sala Diana Ariza</span></div></td>
+        <td><div class="cell c-lectura blk"><span class="ic">📖</span><span class="nm">Lectura + Mentalidad</span><span class="pl">Sala Diana Ariza</span></div></td>
+        <td><div class="cell c-lectura blk"><span class="ic">📖</span><span class="nm">Lectura + Mentalidad</span><span class="pl">Sala Diana Ariza</span></div></td>
+        <td rowspan="2"><div class="cell c-entren blk"><span class="ic">🎯</span><span class="nm">Entrenamiento de la Agencia</span><span class="pl">10:00 AM – 12:00 PM</span><span class="pl">Zoom Nationwide</span><a href="https://nationwidelivedials.com/" target="_blank" style="color:#F3CE73;font-size:9.5px;font-weight:700;margin-top:2px;">nationwidelivedials.com</a></div></td>
+      </tr>
+
+      <!-- ROW 2 : 9:00-10:00 -->
+      <tr>
+        <td class="hora">9:00 – 10:00 AM</td>
+        <td><div class="cell c-entren blk"><span class="ic">🎯</span><span class="nm">Entrenamiento de la Agencia</span><span class="pl">Zoom Nationwide</span><a href="https://nationwidelivedials.com/" target="_blank" style="color:#F3CE73;font-size:9.5px;font-weight:700;margin-top:2px;">nationwidelivedials.com</a></div></td>
+        <td><div class="cell c-entren blk"><span class="ic">🎯</span><span class="nm">Entrenamiento de la Agencia</span><span class="pl">Zoom Nationwide</span><a href="https://nationwidelivedials.com/" target="_blank" style="color:#F3CE73;font-size:9.5px;font-weight:700;margin-top:2px;">nationwidelivedials.com</a></div></td>
+        <td><div class="cell c-trabajo blk"><span class="ic">📝</span><span class="nm">Trabajo Individual del Agente</span><span class="pl">No hay entrenamiento en conjunto</span></div></td>
+        <td><div class="cell c-entren blk"><span class="ic">🎯</span><span class="nm">Entrenamiento de la Agencia</span><span class="pl">Zoom Nationwide</span><a href="https://nationwidelivedials.com/" target="_blank" style="color:#F3CE73;font-size:9.5px;font-weight:700;margin-top:2px;">nationwidelivedials.com</a></div></td>
+        <td><div class="cell c-entren blk"><span class="ic">🎯</span><span class="nm">Entrenamiento de la Agencia</span><span class="pl">Zoom Nationwide</span><a href="https://nationwidelivedials.com/" target="_blank" style="color:#F3CE73;font-size:9.5px;font-weight:700;margin-top:2px;">nationwidelivedials.com</a></div></td>
+      </tr>
+
+      <!-- ROW 3 : 10:00-11:00 -->
+      <tr>
+        <td class="hora">10:00 – 11:00 AM</td>
+        <td><div class="cell c-reunion blk"><span class="ic">🤝</span><span class="nm">Reunión Semanal Equipo</span><span class="pl">Sala Elizabeth · Golden Trust</span></div></td>
+        <td><div class="cell c-temas blk"><span class="ic">📊</span><span class="nm">Temas Operativos y Metas</span><span class="pl">Conversemos con Diana Ariza</span></div></td>
+        <td><div class="cell c-temas blk"><span class="ic">📊</span><span class="nm">Temas Operativos y Metas</span><span class="pl">Conversemos con Diana Ariza</span></div></td>
+        <td><div class="cell c-temas blk"><span class="ic">📊</span><span class="nm">Temas Operativos y Metas</span><span class="pl">Conversemos con Diana Ariza</span></div></td>
+        <td><div class="cell c-temas blk"><span class="ic">📊</span><span class="nm">Temas Operativos y Metas</span><span class="pl">Conversemos con Diana Ariza</span></div></td>
+        <td rowspan="2"><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span><span class="pl">12:00 – 2:00 PM</span><span class="pl">Dudas y preguntas</span></div></td>
+      </tr>
+
+      <!-- ROW 4 : 11:00-1:00 -->
+      <tr>
+        <td class="hora">11:00 AM – 1:00 PM</td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+      </tr>
+
+      <!-- ROW 5 : 1:00-2:00 -->
+      <tr>
+        <td class="hora">1:00 – 2:00 PM</td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td rowspan="5"><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual de cada Agente</span><span class="pl">2:00 PM en adelante</span></div></td>
+      </tr>
+
+      <!-- ROW 6 : 2:00-4:00 -->
+      <tr>
+        <td class="hora">2:00 – 4:00 PM</td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+      </tr>
+
+      <!-- ROW 7 : 4:00-5:00 -->
+      <tr>
+        <td class="hora">4:00 – 5:00 PM</td>
+        <td><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span></div></td>
+        <td><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span></div></td>
+        <td><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span></div></td>
+        <td><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span></div></td>
+        <td><div class="cell c-soporte blk"><span class="ic">☕</span><span class="nm">Soporte al Agente con Diana Ariza</span></div></td>
+      </tr>
+
+      <!-- ROW 8 : 5:00-6:00 -->
+      <tr>
+        <td class="hora">5:00 – 6:00 PM</td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+        <td><div class="cell c-descanso blk"><span class="ic">🌙</span><span class="nm">Descanso</span></div></td>
+      </tr>
+
+      <!-- ROW 9 : 6:00-8:00 -->
+      <tr>
+        <td class="hora">6:00 – 8:00 PM</td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span>
+          <div class="extra">🏆 <strong>7:00–8:00 PM: Presentación de la Agencia</strong><br>Sala Golden Trust · <a href="https://equipogoldentrust.com" target="_blank">equipogoldentrust.com</a></div>
+        </div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span>
+          <div class="extra">🏆 <strong>7:00–8:00 PM: Presentación de la Agencia</strong><br>Sala Golden Trust · <a href="https://equipogoldentrust.com" target="_blank">equipogoldentrust.com</a></div>
+        </div></td>
+        <td><div class="cell c-llamadas blk"><span class="ic">📞</span><span class="nm">Bloque de Llamadas</span></div></td>
+      </tr>
+
+      <!-- ROW 10 : 8:00 en adelante -->
+      <tr>
+        <td class="hora">8:00 PM en adelante</td>
+        <td><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual por Agente</span><span class="pl">Llamadas a compañías, someter pólizas</span></div></td>
+        <td><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual por Agente</span><span class="pl">Llamadas a compañías, someter pólizas</span></div></td>
+        <td><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual por Agente</span><span class="pl">Llamadas a compañías, someter pólizas</span></div></td>
+        <td><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual por Agente</span><span class="pl">Llamadas a compañías, someter pólizas</span></div></td>
+        <td><div class="cell c-trabajo blk"><span class="ic">💼</span><span class="nm">Trabajo Individual por Agente</span><span class="pl">Llamadas a compañías, someter pólizas</span></div></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="links">
+    <h3>🔗 Accesos adicionales a recursos de la agencia</h3>
+    <div class="link-row">
+      <span class="lbl">Entrenamiento de la Agencia (9–10 a.m.)</span>
+      <a href="https://nationwidelivedials.com" target="_blank">nationwidelivedials.com</a>
+    </div>
+    <div class="link-row">
+      <span class="lbl">Presentación de la Agencia (mar/jue 7 p.m.)</span>
+      <a href="https://equipogoldentrust.com" target="_blank">equipogoldentrust.com</a>
+    </div>
+    <div class="link-row">
+      <span class="lbl">Academia Golden Trust</span>
+      <span><a href="https://goldentrustacademy.github.io/AcademiaAgentes/" target="_blank">Ingresar</a> · <span class="code">TOPGOLDEN2026</span></span>
+    </div>
+    <div class="link-row">
+      <span class="lbl">Academia Nationwide (complemento)</span>
+      <a href="https://nwffagency.com" target="_blank">nwffagency.com</a>
+    </div>
+    <div class="link-row">
+      <span class="lbl">Centro de Recursos para el Agente</span>
+      <a href="https://centroderecursosparaelagente.my.canva.site/" target="_blank">Ver recursos</a>
+    </div>
+  </div>
+
+  <div class="footer">Diana Ariza · Agentes Nuevos · AP Brokers / Golden Trust Financial Group</div>
+</div>
+</body>
+</html>
