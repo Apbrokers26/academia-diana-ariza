@@ -253,43 +253,42 @@ img{max-width:100%}
 .edit-btn{background:transparent;color:var(--gold-light);border:1.5px solid var(--border-navy);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--font-body)}
 .edit-btn.active{color:var(--gold-primary);border-color:var(--gold-primary)}
 
-/* Mission-of-the-day card */
-.mission-card{background:var(--cream);border-radius:var(--radius-lg);border:1px solid var(--border-soft);padding:24px 26px;margin-bottom:22px;box-shadow:var(--shadow-card)}
+/* Mission-of-the-day — flat, minimal */
+.mission-card{padding:0 0 20px;margin-bottom:32px;border-bottom:1px solid var(--border-soft)}
 .mission-eyebrow{color:var(--gold-deep);font-size:11px;font-weight:800;letter-spacing:3px;margin-bottom:6px}
-.mission-title{font-family:var(--font-display);color:var(--ink-dark);font-size:20px;font-weight:800;margin-bottom:14px}
-.mission-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.mission-item{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px 13px;font-size:13px;color:var(--ink-dark);line-height:1.4}
-.mission-item.is-link{cursor:pointer;transition:box-shadow .15s,transform .15s}
-.mission-item.is-link:hover{box-shadow:0 8px 18px rgba(217,163,64,.2);transform:translateY(-1px)}
-.mission-num{width:22px;height:22px;border-radius:50%;background:var(--gradient-reading);color:var(--navy-background);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mission-title{font-family:var(--font-display);color:var(--ink-dark);font-size:19px;font-weight:800;margin-bottom:16px}
+.mission-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.mission-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink-dark);line-height:1.4}
+.mission-item.is-link{cursor:pointer}
+.mission-item.is-link:hover .mission-num{background:var(--gold-deep)}
+.mission-num{width:20px;height:20px;border-radius:50%;background:var(--gold-primary);color:var(--navy-background);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
 
-/* Leads reward card */
-.leads-card{border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:26px;color:#fff;background:var(--gradient-training);box-shadow:var(--shadow-card)}
-.leads-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-.leads-eyebrow{color:var(--gold-primary);font-size:11px;font-weight:800;letter-spacing:3px;margin-bottom:6px}
-.leads-title{font-family:var(--font-display);font-size:21px;font-weight:800}
-.leads-desc{color:var(--text-on-navy-muted);font-size:13.5px;margin-top:6px;max-width:520px;line-height:1.5}
-.leads-count{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--gold-primary);text-align:right}
+/* Leads reward — slimmer, lighter */
+.leads-card{border-radius:var(--radius-md);padding:20px 24px;margin-bottom:34px;color:#fff;background:var(--gradient-training)}
+.leads-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.leads-eyebrow{color:var(--gold-primary);font-size:10.5px;font-weight:800;letter-spacing:3px;margin-bottom:5px}
+.leads-title{font-family:var(--font-display);font-size:18px;font-weight:800}
+.leads-desc{color:var(--text-on-navy-muted);font-size:13px;margin-top:5px;max-width:520px;line-height:1.5}
+.leads-count{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--gold-primary);text-align:right}
 .leads-count small{display:block;font-family:var(--font-body);font-size:11px;color:var(--text-on-navy-muted);font-weight:600}
-.leads-progress{background:rgba(255,255,255,.12);border-radius:99px;height:10px;overflow:hidden}
+.leads-progress{background:rgba(255,255,255,.12);border-radius:99px;height:8px;overflow:hidden}
 .leads-progress-fill{height:100%;background:var(--gradient-reading);transition:width .6s ease;border-radius:99px}
-.leads-note{color:var(--text-on-navy-muted);font-size:11.5px;margin-top:10px;line-height:1.5}
+.leads-note{color:var(--text-on-navy-muted);font-size:11px;margin-top:10px;line-height:1.5}
 
-/* Phase route */
-.route-heading{display:flex;align-items:center;gap:12px;margin:30px 0 18px}
+/* Phase route — flat section labels, no colored blocks */
+.route-heading{display:flex;align-items:center;gap:12px;margin:34px 0 22px}
 .route-heading-line{height:2px;width:22px;background:var(--gold-primary)}
 .route-heading-text{color:var(--gold-deep);font-size:11px;font-weight:800;letter-spacing:4px}
 .route-heading-fade{height:2px;flex:1;background:linear-gradient(90deg,var(--gold-deep),transparent)}
-.phase-section{margin-bottom:30px}
-.phase-header{border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-.phase-header.phase-1{background:var(--gradient-reading);color:var(--navy-background)}
-.phase-header.phase-2{background:var(--gradient-training)}
-.phase-header.phase-3{background:var(--gradient-calls)}
-.phase-header.phase-4{background:var(--gradient-operational);color:var(--navy-background)}
-.phase-tag{font-size:10.5px;font-weight:800;letter-spacing:2px;opacity:.85}
-.phase-title{font-family:var(--font-display);font-size:19px;font-weight:800;margin:2px 0 4px}
-.phase-days{font-size:12.5px;opacity:.85}
-.phase-status{font-size:12px;font-weight:700;background:rgba(255,255,255,.18);border-radius:99px;padding:5px 13px;white-space:nowrap}
+.phase-section{margin-bottom:38px}
+.phase-header{padding-left:14px;margin-bottom:18px;border-left:3px solid var(--gold-primary);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.phase-header.phase-2{border-left-color:#1B2A5C}
+.phase-header.phase-3{border-left-color:#0F3324}
+.phase-header.phase-4{border-left-color:var(--coffee)}
+.phase-tag{font-size:10.5px;font-weight:800;letter-spacing:2px;color:var(--gold-deep)}
+.phase-title{font-family:var(--font-display);font-size:18px;font-weight:800;margin:2px 0 3px;color:var(--ink-dark)}
+.phase-days{font-size:12.5px;color:var(--text-muted)}
+.phase-status{font-size:11.5px;font-weight:700;color:var(--text-muted);white-space:nowrap}
 .modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
 
 /* Module cards (premium) */
@@ -329,20 +328,19 @@ img{max-width:100%}
 .score-bar{background:var(--lavender);border-radius:99px;height:8px;overflow:hidden;margin:6px 0}
 .score-fill{height:100%;background:var(--gradient-reading);transition:width .8s ease;border-radius:99px}
 
-/* Career milestones (hitos) */
-.milestones-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:16px}
-.milestone-badge{background:var(--lavender);border-radius:var(--radius-md);padding:14px 10px;text-align:center;border:1.5px solid transparent}
-.milestone-badge.earned{background:rgba(217,163,64,.1);border-color:rgba(217,163,64,.4)}
-.milestone-icon{width:40px;height:40px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:1.5px solid var(--border-soft)}
-.milestone-badge.earned .milestone-icon{background:var(--gradient-reading);border-color:transparent}
-.milestone-icon svg{width:18px;height:18px}
+/* Career milestones (hitos) — flat row, no per-badge cards */
+.milestones-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:18px 10px;margin-top:20px}
+.milestone-badge{text-align:center}
+.milestone-icon{width:38px;height:38px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--lavender)}
+.milestone-badge.earned .milestone-icon{background:var(--gradient-reading)}
+.milestone-icon svg{width:17px;height:17px}
 .milestone-name{font-size:11px;font-weight:700;color:var(--ink-dark);line-height:1.3}
 .milestone-badge:not(.earned) .milestone-icon svg{opacity:.35}
 .milestone-badge:not(.earned) .milestone-name{color:var(--text-muted)}
 .milestone-hint{font-size:9.5px;color:var(--text-muted);margin-top:4px;line-height:1.3}
 
 /* Diana accompaniment */
-.diana-section{background:var(--cream);border-radius:var(--radius-lg);border:1px solid var(--border-soft);margin:30px 0;padding:0;overflow:hidden;box-shadow:var(--shadow-card);display:grid;grid-template-columns:1fr}
+.diana-section{background:var(--cream);border-radius:var(--radius-lg);border:1px solid var(--border-soft);margin:34px 0 10px;padding:0;overflow:hidden;display:grid;grid-template-columns:1fr}
 @media (min-width:760px){.diana-section{grid-template-columns:.85fr 1.15fr}}
 .diana-photo-col{position:relative;min-height:220px;background:var(--navy-panel)}
 .diana-photo-col img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -1035,7 +1033,7 @@ style="font-size:17px;padding:20px 30px;letter-spacing:1.5px;text-transform:uppe
     <div id="modules-grid"></div>
 
     <!-- MEDALLAS -->
-    <div id="medals-section" style="background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-soft);padding:22px 24px;margin-bottom:24px;box-shadow:var(--shadow-card)">
+    <div id="medals-section" style="padding:24px 0;margin-bottom:24px;border-top:1px solid var(--border-soft)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
         <div>
           <div style="font-family:var(--font-display);color:var(--ink-dark);font-size:17px;font-weight:800">Tus medallas</div>
