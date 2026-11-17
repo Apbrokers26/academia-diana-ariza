@@ -290,6 +290,10 @@ body{background:#fff}
 .sub-tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
 .sub-tab{border:1.5px solid #DCE5F5;background:#fff;color:#101D42;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
 .sub-tab.on{background:#101D42;color:#fff;border-color:#101D42}
+
+/* Portada nítida: sin degradado oscuro sobre la imagen */
+.mod-video::before,.video-frame-wrap::before{display:none!important}
+.mod-video img.main-thumb{object-fit:cover!important}
 </style>
 </head>
 <body>
