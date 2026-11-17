@@ -284,6 +284,12 @@ body{background:#fff}
 .module-num{background:#0066FF!important;color:#fff!important;text-shadow:none!important}
 .module-card{display:flex;flex-direction:column}.module-card .module-body{flex:1}
 
+
+/* SIN SEGUIMIENTO: sin progreso, sin medallas, sin preguntas */
+.progress-info,.progress-bar-sm,#medals-section,#modal-questions,#det-actions{display:none!important}
+.sub-tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+.sub-tab{border:1.5px solid #DCE5F5;background:#fff;color:#101D42;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.sub-tab.on{background:#101D42;color:#fff;border-color:#101D42}
 </style>
 </head>
 <body>
@@ -390,6 +396,15 @@ const SUBMODULES = {
   12: [
     {id:"12-1", title:"PDF Como Descargar Crankwheel", desc:"Guia paso a paso para instalar y usar Crankwheel", type:"pdf", url:"https://drive.google.com/file/d/19X7zb9SLyYlWXikHe-dU4RzAPUVmPF7z/preview"}
   ],
+  14: [
+    {id:"14-1", group:"Entrenamiento", title:"Anualidades con Diana Ariza", desc:"Entrenamiento completo de anualidades", type:"video", url:"https://drive.google.com/file/d/1_8WO5OufSqpcD0L5OYWRvuPT7N8hnf-K/view?usp=drive_link"},
+    {id:"14-2", group:"Entrenamiento", title:"Entrenamiento de Anualidades 2", desc:"Próximamente", type:"soon", url:""},
+    {id:"14-3", group:"Entrenamiento", title:"Entrenamiento de Anualidades 3", desc:"Próximamente", type:"soon", url:""},
+    {id:"14-4", group:"Entrenamiento", title:"Entrenamiento de Anualidades 4", desc:"Próximamente", type:"soon", url:""},
+    {id:"14-5", group:"Cómo someter anualidades", title:"Cómo someter una anualidad", desc:"Paso a paso para someter anualidades", type:"soon", url:""},
+    {id:"14-6", group:"Cómo someter anualidades", title:"Cómo someter con F&G", desc:"Próximamente", type:"soon", url:""},
+    {id:"14-7", group:"Cómo someter anualidades", title:"Cómo someter con National Life Group", desc:"Próximamente", type:"soon", url:""},
+  ],
   13: [
     {id:"13-1", title:"PDF Objeciones - Imprimir", desc:"Guia completa de objeciones para imprimir y practicar", type:"pdf", url:"https://drive.google.com/file/d/14TXetQTMtc5U-9j6oZBtRonhJFsbv85M/preview"}
   ]
@@ -408,7 +423,7 @@ const SUBMOD_LOGOS = {
   "7-1": "nlg", "7-2": "nlg", "7-3": "moo",
   "7-4": "fg", "7-5": "amicable", "7-6": "americo",
   "7-7": "transamerica",
-  "8-1": "nlg", "8-2": "fg"
+  "8-1": "nlg", "8-2": "fg", "14-6": "fg", "14-7": "nlg"
 };
 const DISC_Q = [
   {id:1,sec:"PERFIL DE COMPORTAMIENTO DISC",q:"Cuando tienes una meta clara, ¿cómo actúas?",opts:[
@@ -1228,12 +1243,8 @@ function openModule(idx) {
   const isDone = completed.has(idx);
   const acts = document.getElementById('det-actions');
   acts.innerHTML = '';
-  if (!isDone) {
-    const b = document.createElement('button');
-    b.className = 'complete-btn'; b.textContent = '[OK] Marcar como completado';
-    b.onclick = function() { openModuleQuestions(idx); };
-    acts.appendChild(b);
-  } else {
+  if (false) {
+  } else if (false) {
     const m = medals[idx];
     acts.innerHTML = `<div style="background:#F8FAFD;border-radius:12px;padding:14px 16px;border:1px solid #DCE5F5">
       <div style="color:#27AE60;font-weight:700;margin-bottom:4px">[OK] Completado · ${m && m.score ? m.score : 100} puntos</div>
@@ -1256,8 +1267,22 @@ function openModule(idx) {
     section.id = 'submod-section';
     section.className = 'submod-section';
     section.innerHTML = '<div class="submod-title">Lecciones de este módulo</div>';
+    var groups = [];
+    subs.forEach(function(s){ if (s && s.group && groups.indexOf(s.group) < 0) groups.push(s.group); });
+    window.__tab = window.__tab || {};
+    var activeGroup = groups.length ? (window.__tab[mod.id] && groups.indexOf(window.__tab[mod.id]) >= 0 ? window.__tab[mod.id] : groups[0]) : null;
+    if (groups.length) {
+      var bar = document.createElement('div'); bar.className = 'sub-tabs';
+      groups.forEach(function(g){
+        var tb = document.createElement('button'); tb.className = 'sub-tab' + (g === activeGroup ? ' on' : ''); tb.textContent = g;
+        tb.onclick = function(){ window.__tab[mod.id] = g; openModule(idx); };
+        bar.appendChild(tb);
+      });
+      section.appendChild(bar);
+    }
     subs.forEach(function(sub, i) {
       if (!sub || !sub.id) return;
+      if (activeGroup && sub.group !== activeGroup) return;
       var card = document.createElement("div");
       card.className = "submod-card";
       var savedUrl = localStorage.getItem("submod_" + sub.id) || sub.url || "";
