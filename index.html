@@ -294,6 +294,34 @@ body{background:#fff}
 /* Portada nítida: sin degradado oscuro sobre la imagen */
 .mod-video::before,.video-frame-wrap::before{display:none!important}
 .mod-video img.main-thumb{object-fit:cover!important}
+
+/* ── OPCIÓN 2: AZUL + DORADO/COBRE ── */
+body,.screen{background:#FFFFFF!important}
+.btn-gold,.btn-link,.complete-btn,.modal-submit,.submod-save,.submod-num,.opt-tag{background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important;color:#101D42!important;box-shadow:0 6px 16px rgba(224,165,107,.35)!important;text-shadow:none!important}
+.btn-ghost,.back-btn,.navy-card .edit-btn{border-color:#E3A56B!important;color:#101D42!important;background:#fff!important}
+.module-num{background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important;color:#101D42!important}
+.acad-label,.section-text,.features-label,.navy-card>div:first-child>div:first-child,.navy-card .acad-label{color:#C9803F!important}
+.answer-letter,.submod-action,.edit-btn.active{color:#C9803F!important}
+.gold-line,.divider,.section-line{background:linear-gradient(90deg,transparent,#E3A56B,transparent)!important}
+.section-dot,.feature-dot,.benefit-dot{background:#E3A56B!important}
+.features-box{background:linear-gradient(90deg,#F9DC8A,#E3A56B) top/100% 5px no-repeat,#fff!important}
+.feature-dot{background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important}
+.card,.mod-content{border-top-color:#E3A56B!important}
+.submod-card,.option-body{border-left-color:#E3A56B!important}
+.submod-card:hover{border-color:#E3A56B!important;box-shadow:0 4px 16px rgba(224,165,107,.25)!important}
+.submod-title::before{background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important}
+.module-card{border-color:#EADFCF!important}
+.progress-fill,.progress-fill-sm,.score-fill,.navy-card .progress-fill-sm{background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important}
+.sub-tab.on{background:#1B3F7F!important;border-color:#1B3F7F!important}
+.sub-tab{border-color:#EADFCF!important}
+.acad-title{background:linear-gradient(90deg,#1B3F7F,#C9803F)!important;-webkit-background-clip:text!important;background-clip:text!important}
+.navy-card{background:linear-gradient(135deg,#2F6DB5 0%,#1B3F7F 60%,#173469 100%)!important;border:0!important;box-shadow:0 10px 28px rgba(27,63,127,.28)!important}
+.navy-card,.navy-card .acad-header-title,.navy-card .progress-pct{color:#fff!important}
+.navy-card .acad-header-title{color:#fff!important}
+.navy-card .acad-label,.navy-card>div:first-child>div:first-child{color:#F2C078!important}
+.mod-content{border-top:4px solid #E3A56B!important}
+.submod-btn,.submod-open,.open-btn,.submod-card button:not(.submod-save){background:linear-gradient(135deg,#F9DC8A,#E3A56B)!important;color:#101D42!important;box-shadow:none!important}
+.acad-title{background:linear-gradient(90deg,#101D42,#1B3F7F)!important;-webkit-background-clip:text!important;background-clip:text!important}
 </style>
 </head>
 <body>
@@ -348,7 +376,7 @@ const SUBMODULES = {
   3: [
     {id:"3-1", title:"Crea tus Metas", desc:"Calcula cuántas pólizas, leads y dinero necesitas para llegar a tu meta mensual", type:"interactive", url:"crea_tus_metas.html"},
     {id:"3-2", title:"Matematica del Exito", desc:"PDF con los numeros que necesitas para llegar al Top", type:"pdf", url:"matematica_del_exito.pdf"},
-    {id:"3-4", title:"Guía de Compensación", desc:"Porcentajes por compañía, producto y nivel, con ejemplos reales", type:"pdf", url:"guia_compensacion.pdf"},
+    {id:"3-4", title:"Guía de Compensación", desc:"Elige tu nivel y calcula cuánto ganas por compañía y producto", type:"interactive", url:"guia_compensacion.html"},
     {id:"3-3", title:"Calculadora de Comisiones", desc:"Calcula cuánto te pagan por compañía, producto y nivel de contrato", type:"interactive", url:"https://apbrokers26.github.io/academia-diana-ariza/calculadora_comisiones.html"}
   ],
   4: [
@@ -1367,7 +1395,7 @@ function openModule(idx) {
         card.style.cursor = "default";
       } else if (savedUrl) {
         var openBtn = document.createElement("span");
-        openBtn.style.cssText = "background:#0066FF;color:#101D42;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer";
+        openBtn.style.cssText = "background:linear-gradient(135deg,#F9DC8A,#E3A56B);color:#101D42;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer";
         openBtn.textContent = savedUrl && savedUrl.startsWith("data:application") ? "Descargar" : "Abrir";
         var url = savedUrl;
         openBtn.onclick = function(e) {
