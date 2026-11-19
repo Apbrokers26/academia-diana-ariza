@@ -22,7 +22,9 @@ h1 span{color:var(--gold)}
 .mlbl{font-size:13px;font-weight:600;color:var(--mut)}
 .levels{display:grid;grid-template-columns:repeat(14,1fr);gap:5px}
 .lv{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 0;font:inherit;font-weight:700;font-size:14px;color:var(--navy);cursor:pointer}
+.lv .n{display:block;font-size:15px}.lv .p{display:block;font-size:11px;font-weight:600;color:var(--mut);margin-top:1px}.lv.on .p{color:var(--navy)}
 .lv.on{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:var(--g2);box-shadow:0 4px 12px rgba(227,165,107,.4)}
+.lvnote{font-size:12px;color:var(--mut);margin-top:8px}
 .card{border:2px solid var(--g2);border-radius:16px;overflow:hidden;margin-bottom:22px;box-shadow:0 8px 24px rgba(16,29,66,.08);background:#fff}
 .ch{padding:16px 20px;color:#fff;font-size:22px;font-weight:800;text-align:center}
 .eq{background:linear-gradient(135deg,#FFF6DC,#FBE3BE);padding:12px 14px;border-bottom:1.5px solid var(--g2)}
@@ -78,6 +80,7 @@ tr.sel td.nv{background:var(--navy)!important;color:var(--g1)!important}
     <div class="toprow"><b>¿En qué nivel estás?</b><span class="mlbl">Aporte mensual del cliente</span>
       <div class="money"><span>$</span><input id="mp" type="number" inputmode="decimal" min="0" step="10" value="200"></div></div>
     <div class="levels" id="levels"></div>
+    <div class="lvnote">Porcentaje de referencia: Term Life Express (Mutual of Omaha). Cada producto tiene el suyo: míralos en las tarjetas de abajo.</div>
   </div>
   <div id="cards"></div>
   <p class="foot">Porcentajes según la Guía de Compensación de FFL. Las cifras son referenciales: pueden cambiar según tu contrato y la compañía, confírmalas con tu upline. Toca el nombre de un producto en la tabla para ver su ejemplo. &nbsp;<a href="guia_compensacion.pdf" target="_blank">Ver la guía original en PDF</a></p>
@@ -127,7 +130,7 @@ function card(c,ci){
    '</div></div></div>';
 }
 function render(){
-  var h='';for(var l=1;l<=14;l++)h+='<button class="lv'+(l===S.lv?' on':'')+'" onclick="setLv('+l+')">'+l+'</button>';
+  var h='';for(var l=1;l<=14;l++)h+='<button class="lv'+(l===S.lv?' on':'')+'" onclick="setLv('+l+')"><span class="n">'+l+'</span><span class="p">'+fp(C[0].rows[14-l][0])+'</span></button>';
   $('levels').innerHTML=h;
   $('cards').innerHTML=C.map(card).join('');
 }
