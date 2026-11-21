@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escala de compensación y bonos</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#101D42;--line:#DCE5F5;--mut:#5B6B8C;--g1:#F9DC8A;--g2:#E3A56B;--gold:#C9803F;--bl:#2F6DB5;--bl2:#1B3F7F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',system-ui,sans-serif;background:#fff;color:var(--navy);-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:18px 14px 60px}
+.eyebrow{font-size:11px;letter-spacing:3px;font-weight:700;color:var(--gold);text-transform:uppercase}
+h1{font-size:30px;font-weight:800;margin:4px 0 14px}h1 span{color:var(--gold)}
+.tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--line);padding-bottom:12px;flex-wrap:wrap}
+.tab{font:inherit;font-weight:700;font-size:15px;padding:10px 18px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--navy);cursor:pointer}
+.tab.on{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:var(--g2);box-shadow:0 4px 12px rgba(227,165,107,.4)}
+.pane{display:none}.pane.on{display:block}
+h2{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:800;margin:6px 0 10px}
+.row{display:flex;align-items:stretch;margin-bottom:7px;border-radius:12px;overflow:hidden;border:1.5px solid var(--line)}
+.pct{width:92px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--navy)}
+.amt{flex:1;background:linear-gradient(135deg,var(--bl),var(--bl2));color:#fff;padding:9px 14px;display:flex;flex-direction:column;justify-content:center}
+.amt b{font-size:24px;font-weight:800;line-height:1.1}.amt small{font-size:12px;font-weight:600;color:#CFE0FA;margin-top:2px}
+.amt.two{flex-direction:row;gap:0;padding:0}
+.half{flex:1;padding:9px 14px;display:flex;flex-direction:column;justify-content:center}
+.half+.half{border-left:2px solid rgba(255,255,255,.35)}
+.row.start .amt{background:var(--navy)}.row.start .amt b{font-size:17px}
+.hd{display:flex;margin:10px 0 6px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut)}
+.hd div{flex:1;padding-left:14px}.hd i{width:92px;flex:none}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:20px}
+.rule{border:2px solid var(--g2);border-radius:14px;padding:14px 16px;background:#FFFAF0}
+.rule b{display:block;font-size:14px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.rule li{font-size:14px;line-height:1.45;margin:0 0 4px 16px}
+.bonus{background:var(--navy);border-radius:18px;padding:26px 22px;color:#fff}
+.bonus .t{text-align:center;margin-bottom:16px}
+.bonus .t small{display:block;font-size:12px;letter-spacing:2px;color:#CBD5EE;text-transform:uppercase;margin-top:4px}
+.bonus .t b{font-size:34px;font-weight:800;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:1px}
+.br{display:flex;justify-content:space-between;align-items:center;padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.14);font-size:20px;font-weight:700}
+.br:last-of-type{border-bottom:0}
+.br span:last-child{font-weight:800;font-size:22px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.fine{margin-top:16px;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.08);font-size:13.5px;line-height:1.55;color:#E6ECFA}
+.fine b{color:var(--g1)}
+.fine p+p{margin-top:8px}
+.note{font-size:12px;color:var(--mut);margin-top:12px}
+@media(max-width:560px){.pct{width:66px;font-size:19px}.amt b{font-size:19px}.amt small{font-size:10.5px}.half{padding:8px 9px}.hd i{width:66px}.br{font-size:16px}.br span:last-child{font-size:18px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="eyebrow">Nationwide Financial Firm</div>
+<h1>Escala de <span>compensación</span> y bonos</h1>
+<div class="tabs">
+<button class="tab on" data-p="plan">Plan de compensación</button>
+<button class="tab" data-p="bonus">Bono mensual de productor</button>
+</div>
+
+<div class="pane on" id="plan">
+<h2>Contratos Builder</h2>
+<div id="builder"></div>
+<div class="hd"><i></i><div>Contrato Producer · producción personal pagada</div><div>Contrato Builder · jerarquía total pagada</div></div>
+<div id="prod"></div>
+<div class="rules">
+<div class="rule"><b>🚀 Sube de nivel</b><ul><li>Alcanza el volumen requerido durante 2 meses consecutivos.</li><li>El mes de producción termina el último día calendario.</li><li>El volumen personal + el del equipo cuentan para la promoción.</li></ul></div>
+<div class="rule"><b>💼 Mantén tu rango</b><ul><li>Alcanza tu volumen requerido al menos una vez cada 3 meses.</li></ul></div>
+<div class="rule"><b>⚖️ Regla del tope de 50%</b><ul><li>No más del 50% de tu volumen puede venir de tu línea más grande.</li><li>Ejemplo: para $1.5M en total, solo $750K pueden venir de una línea; el resto debe venir de las demás.</li></ul></div>
+</div>
+<p class="note">Todos los montos son producción emitida y pagada (issued paid).</p>
+</div>
+
+<div class="pane" id="bonus">
+<div class="bonus">
+<div class="t"><b>PRODUCER BONUS</b><small>Bono mensual · según volumen mensual de vida emitido y pagado</small></div>
+<div id="bl"></div>
+<div class="fine">
+<p><b>Condiciones (texto original):</b> Any producer receiving a bonus must be in good standing with FFL. FFL reserves the right to garnish any lead debt, carrier debt, licensing fees or any outstanding balance that has rolled to FFL from the person production bonus. Volume is based on the calendar month. The minimum amount a producer can earn is $650.</p>
+<p><b>En español:</b> Para recibir un bono, el productor debe estar en buen estado con FFL. FFL se reserva el derecho de descontar deuda de leads, deuda con la aseguradora, costos de licencias o cualquier saldo pendiente que haya pasado a FFL, del bono de producción de la persona. El volumen se calcula por mes calendario. El monto mínimo que un productor puede ganar es $650.</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+const B=[[145,"$1,000,000","10 pólizas emitidas y pagadas de $50,000 c/u"],[140,"$750,000","10 pólizas emitidas y pagadas de $50,000 c/u"],[135,"$500,000","8 pólizas emitidas y pagadas de $50,000 c/u"],[130,"$400,000","6 pólizas emitidas y pagadas de $50,000 c/u"],[125,"$250,000","4 pólizas emitidas y pagadas de $50,000 c/u"],[120,"$200,000","3 pólizas emitidas y pagadas de $40,000 c/u"]];
+const P=[[115,"$40,000","$150,000"],[110,"$35,000","$125,000"],[105,"$30,000","$100,000"],[100,"$25,000","$75,000"],[95,"$20,000","$50,000"],[90,"$15,000","$40,000"],[85,"$10,000","$30,000"]];
+const K=[["$20K",650],["$30K",1200],["$40K",1600],["$50K",2000],["$75K",4000],["$100K",8000],["$125K",10000],["$150K",15000],["$200K",20000]];
+document.getElementById('builder').innerHTML=B.map(r=>`<div class="row"><div class="pct">${r[0]}%</div><div class="amt"><b>${r[1]}</b><small>${r[2]} · jerarquía total emitida y pagada</small></div></div>`).join('');
+document.getElementById('prod').innerHTML=P.map(r=>`<div class="row"><div class="pct">${r[0]}%</div><div class="amt two"><div class="half"><b>${r[1]}</b><small>Producción personal</small></div><div class="half"><b>${r[2]}</b><small>Jerarquía total</small></div></div></div>`).join('')+`<div class="row start"><div class="pct">80%</div><div class="amt"><b>CONTRATO INICIAL</b></div></div>`;
+document.getElementById('bl').innerHTML=K.map(k=>`<div class="br"><span>${k[0]} EN VIDA</span><span>$${k[1].toLocaleString('en-US')}</span></div>`).join('');
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab,.pane').forEach(e=>e.classList.remove('on'));t.classList.add('on');document.getElementById(t.dataset.p).classList.add('on')});
+</script>
+</body></html>
